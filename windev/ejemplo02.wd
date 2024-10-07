@@ -1,0 +1,48 @@
+PROCEDURE IsInArray(element is string, array_value is array of string) 
+FOR EACH item OF array_value
+	IF item = element THEN
+		RETURN True
+	END
+END
+RETURN False
+
+PROCEDURE FindIndex(element is string, _array is array of string)
+FOR i = 1 TO ArrayCount(_array)
+	IF _array[i] = element THEN
+		RETURN i
+	END
+END
+RETURN -1
+
+PROCEDURE IsBalanced(cadena)
+pila		is array of string
+aperturas	is array of string	= ["(", "{", "["]
+cierres		is array of string	= [")", "}", "]"]
+
+FOR i = 1 TO Length(cadena)
+	caracter is string = cadena[[i]]
+	
+	IF IsInArray(caracter, aperturas) THEN
+		Add(pila, caracter)
+	ELSE IF IsInArray(caracter, cierres) THEN
+		openingIndex is int = FindIndex(caracter, cierres)
+		IF ArrayCount(pila) = 0 OR pila[ArrayCount(pila)] <> aperturas[openingIndex] THEN
+			RETURN False
+		END
+		ArrayDelete(pila, ArrayCount(pila))
+	END
+END
+
+RETURN ArrayCount(pila) = 0
+
+
+
+result1 is boolean = IsBalanced("[()()(){[][]}{([]{})}]") 
+result2 is boolean = IsBalanced("([(]{)})") 
+result3 is boolean = IsBalanced("([})") 
+result4 is boolean = IsBalanced("[()()(){[hola][onyx]}{([juan]{})}]")
+
+Trace(result1)
+Trace(result2)
+Trace(result3)
+Trace(result4)

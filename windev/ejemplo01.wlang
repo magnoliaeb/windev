@@ -1,0 +1,51 @@
+PROCEDURE SearchWord(word, arr_frequencies)
+FOR index = 1 TO arr_frequencies.Count
+	IF arr_frequencies[index].s_word = word THEN
+		RETURN index
+	END
+END
+RETURN -1
+
+ PROCEDURE CountWords(cadena is string)
+strText is string = Lower(cadena)
+strText = RegexReplace(strText, "[,.()!¡?¿]", "")
+
+words is array of strings= strText.Split(" ")
+
+FrequencyStruct	is Structure
+	s_word	is string
+	i_count	is int
+END
+
+arr_frequencies is array of FrequencyStruct
+
+// Loop through the words and count frequencies
+FOR index = 1 TO words.Count
+	word		is string	= words[index]
+	existIndex	is int		= SearchWord(word, arr_frequencies)
+	
+	IF existIndex = -1 THEN
+		newFrequency is FrequencyStruct
+		newFrequency.s_word		= word
+		newFrequency.i_count	= 1
+		Add(arr_frequencies, newFrequency)
+	ELSE
+		arr_frequencies[existIndex].i_count += 1
+	END
+END
+
+// Return the frequency array
+RETURN arr_frequencies
+
+
+FrequencyStruct is Structure
+	s_word	is string
+	i_count	is int
+END
+
+myResult is array of FrequencyStruct = CountWords("hello world, big world")
+FOR EACH frequency OF myResult
+	Trace(frequency.s_word + ": " + frequency.i_count)
+END
+
+
